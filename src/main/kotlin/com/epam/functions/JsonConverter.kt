@@ -14,7 +14,18 @@ object arr {
      */
     operator fun get(
         vararg elements: Any?
-    ) = TODO("Return json array")
+    ) :JsonArray {
+        val jsonElement=elements.map { element->
+            when{
+                elements==null->JsonNull
+                elements is JsonValue -> element
+                elements is Number -> JsonPrimitive.of(element.toString())
+                element is Char ->JsonPrimitive.of(element.toString())
+                else -> JsonPrimitive.of(element.toString())
+            }
+        }
+        return JsonArray.of(jsonElement as List<JsonValue>)
+    }
 
     /**
      * Creates json array from given [elements]. Each element
@@ -28,7 +39,21 @@ object arr {
      */
     operator fun get(
         elements: Iterable<Any?>
-    ) = TODO("Return json array")
+    ): JsonArray {
+        val jsonElements = mutableListOf<JsonValue>()
+
+        for (element in elements) {
+            val jsonValue: JsonValue = when {
+                element == null -> JsonNull
+                element is JsonValue -> element
+                element is Number -> JsonPrimitive.of(element)
+                element is Char -> JsonPrimitive.of(element.toString())
+                else -> JsonPrimitive.of(element.toString())
+            }
+            jsonElements.add(jsonValue)
+        }
+        return JsonArray.of(jsonElements)
+    }
 }
 
 /**
@@ -36,4 +61,8 @@ object arr {
  */
 fun obj(
     block: JsonObjectCreator.() -> Unit
-) = TODO("Return json object")
+) :JsonObject{
+    val creator = JsonObjectCreator()
+    creator.block()
+    return creator.toJsonTree()
+}
