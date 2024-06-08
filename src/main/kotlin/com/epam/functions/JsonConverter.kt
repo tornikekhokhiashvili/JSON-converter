@@ -13,17 +13,8 @@ object arr {
      * For these, you should use [toJsonValue] extension of [Any]
      */
     operator fun get(vararg elements: Any?): JsonArray {
-        val jsonElement = elements.map { element ->
-            when (element) {
-                null -> JsonNull
-                is JsonValue -> element
-                is Number -> JsonPrimitive.of(element)
-                is Char -> JsonPrimitive.of(element.toString())
-                is Boolean -> JsonPrimitive.of(element)
-                else -> JsonPrimitive.of(element.toString())
-            }
-        }
-        return JsonArray.of(jsonElement)
+        val jsonValues = elements.map { it?.toJsonValue() ?: JsonNull }
+        return JsonArray.of(jsonValues)
     }
 
     /**
@@ -37,19 +28,8 @@ object arr {
      * For these, you should use [toJsonValue] extension of [Any]
      */
     operator fun get(elements: Iterable<Any?>): JsonArray {
-        val jsonElements = mutableListOf<JsonValue>()
-        for (element in elements) {
-            val jsonValue: JsonValue = when (element) {
-                null -> JsonNull
-                is JsonValue -> element
-                is Number -> JsonPrimitive.of(element)
-                is Char -> JsonPrimitive.of(element.toString())
-                is Boolean -> JsonPrimitive.of(element)
-                else -> JsonPrimitive.of(element.toString())
-            }
-            jsonElements.add(jsonValue)
-        }
-        return JsonArray.of(jsonElements)
+        val jsonValue=elements.map { it?.toJsonValue() ?:JsonNull }
+        return JsonArray.of(jsonValue)
     }
 }
 

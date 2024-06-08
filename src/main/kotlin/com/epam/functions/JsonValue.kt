@@ -15,8 +15,6 @@ class JsonPrimitive private constructor(
     companion object {
         private val TRUE = JsonPrimitive(true.toString())
         private val FALSE = JsonPrimitive(false.toString())
-
-
         fun of(
             value: Number
         ) = JsonPrimitive(value.toString())
